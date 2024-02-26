@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TeaShopMVC.Models.Tea>
+
+@{
+    ViewBag.Title = "Comments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>История Ваших заказов </h2>
+
+@{
+    IEnumerable<Order> orders = ViewBag.Orders;
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>  Номер  </th>
+                <th>  Дата  </th>
+                <th>  Сумма </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 1; }
+            @foreach (var item in orders)
+            {
+                <tr>
+                    <td>  @i</td>
+                    <td>  <label class="control-label">@item.Date</label>  </td>
+                    <td>   <label class="control-label">@item.TotalPrice </label>  </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<h3>Товары, которые Вы покупали</h3>
+<h4>Оставьте отзыв, он поможет сделать выбор другим покупателям </h4>
+
+<div class="justify-content-around" style="display: flex; flex-wrap: wrap">
+    @foreach (var tea in Model)
+    {
+        <div class="col-md-auto">
+            <div class="card my-1 border-0" style="width: 14rem;">
+                <img src="@Url.Content("~/images/")@tea.ImageUrl" class="smallImg card-img-top" alt="Обложка" />
+                <div class="card-body">
+                    <h5 class="card-title">@tea.Price p.</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@tea.Name</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">@tea.Weight (гр.)</h6>
+                    <a asp-controller="Client" asp-action="LeaveReview" asp-route-id=@tea.Id class="btn btn-secondary">Оставить отзыв</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

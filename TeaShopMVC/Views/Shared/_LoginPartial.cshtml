@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    string userName = UserManager.GetUserName(User);
+    IdentityUser user = await UserManager.FindByNameAsync(userName);
+    @if (user != null && await UserManager.IsInRoleAsync(user, "admin"))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@userName</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Пользователи</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="GetRoles">Роли</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Tea" asp-action="Index">Управление товарами</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword" asp-route-name="@UserManager.GetUserName(User)">Смена пароля</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a></li>
+            </ul>
+        </li>
+    }
+    else if (user != null && await UserManager.IsInRoleAsync(user, "manager"))
+    {
+        <form class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@userName</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-area="" asp-controller="Tea" asp-action="Index">Управление товарами</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword" asp-route-name="@UserManager.GetUserName(User)">Смена пароля</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a></li>
+            </ul>
+        </form>
+    }
+    else
+    {
+        <form class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@UserManager.GetUserName(User)</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-area="" asp-controller="Client" asp-action="Index">Профиль</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Client" asp-action="GetPurchaseHistory">Покупки</a></li>
+                <li><hr class="dropdown-divider"></li>
+                @*<li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword" asp-route-name="@UserManager.GetUserName(User)">Смена пароля</a></li>*@
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a></li>
+            </ul>
+        </form>
+    }
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Account" asp-action="Login">Вход</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+    </li>
+}

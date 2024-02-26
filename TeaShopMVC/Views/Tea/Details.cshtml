@@ -1,0 +1,59 @@
+﻿@model TeaShopMVC.Models.Tea
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Информация о чае</h2>
+
+<div>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-3">
+            <div class="card" style="width: 12rem;">
+                <img src="@Url.Content("~/images/")@Model.ImageUrl" class="card-img-top" alt="обложка">
+                <div class="card-body">
+                    <h4 class="card-title">@Model.Price руб.</h4>
+                    <a asp-action="Details" asp-controller="Tea" asp-route-id="@Model.Id" target="_blank" class="btn btn-light">
+                        @Model.Name
+                    </a>
+                    <p class="card-text">@Model.Type.Name</p>
+                    @if (Model.Amount > 0)
+                    {
+                        <a asp-action="Add" asp-controller="Cart" asp-route-id="@Model.Id" target="_blank" class="btn btn-info">
+                            В корзину
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-secondary">Нет в наличии</a>
+                    }
+                    <br />
+                    <p> &nbsp;</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3">
+            @{
+                if (ViewBag.HasReview)
+                {
+                    List<Review> list = (List<Review>)ViewBag.Reviews;
+                    foreach (var item in list)
+                    {
+                        <p>Отзыв от @item.Owner.Name</p>
+                        <p>@item.Text</p>
+                        <br />
+                        <br />
+                    }
+                }
+                else
+                {
+                    <p>На этот продукт пока нет отзывов, вы можете быть первым :)</p>
+                }
+            }
+        </div>
+    </div>
+
+</div>

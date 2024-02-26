@@ -1,0 +1,100 @@
+﻿@model IEnumerable<TeaShopMVC.Models.CartItem>
+@using System.Web;
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    string msg = (string)ViewBag.Msg;
+
+if (!msg.Contains("чай"))
+    {
+        <h2>@msg</h2>
+    }
+    <br />
+    <br />
+    if (msg.Contains("чай"))
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SelectedTea.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SelectedTea.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </th>
+                    <th>
+                        Стоимость
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var rowId = "itemRow" + item.SelectedTea.Id;
+
+                    <tr id=@rowId>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SelectedTea.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SelectedTea.Price)
+                        </td>
+                        <td>
+                            <input type="number" min="1" max="@item.SelectedTea.Amount" id="quantity" value="@item.Quantity" oninput="validity.valid||(value='1');"
+                                   onchange="onItemQuantityChanged(event, @item.Id)" onblur="Check(event, @item.Id)" />
+                        </td>
+                        <td class="itemCost">
+                            @(item.Quantity * item.SelectedTea.Price)
+                        </td>
+                        <td>
+                            <a asp-action="Delete" asp-route-id="@item.Id">@HttpUtility.HtmlDecode("&#10060;")</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p> Общая стоимость:<span id="totalCost"> @ViewBag.Sum </span> руб.</p>
+        <a asp-action="Create" asp-controller="Order" class="btn btn-info"> Оформить заказ </a>
+    }
+    <a asp-action="Index" asp-controller="Home" class="btn btn-info"> Продолжить покупки </a>
+}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function onItemQuantityChanged(e, cartId) {
+        let text = e.target.value;
+        if (!isNaN(parseInt(text, 10))) {
+            axios.post("/Cart/ChangeItemQuantity",
+                {
+                    id: cartId,
+                    newQuantity: e.target.value
+                }
+            ).then((response) => {
+                var totalCost = parseInt($("#totalCost").text(), 10);
+                totalCost += response.data.delta;
+                $("#totalCost").text(totalCost.toString());
+                var row = $("#itemRow" + response.data.teaId);
+                var itemCostCell = row.find(".itemCost");
+                var itemCost = parseInt(itemCostCell.text(), 10);
+                itemCost += response.data.delta;
+                itemCostCell.text(itemCost.toString());
+            });
+        }
+    }
+    function Check(e, cartId) {
+        let text = e.target.value;
+        if (isNaN(parseInt(text, 10)) || parseInt(text, 10) < 1) {
+            e.target.value = '1';
+            onItemQuantityChanged(e, cartId);
+        }
+    }
+</script>
+
+
+
+

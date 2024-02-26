@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="nk-cookie-banner alert alert-dark text-center mb-0" role="alert">
+        🍪 Этот веб-сайт использует файлы cookie, чтобы обеспечить вам наилучший доступ к нашему веб-сайту.
+        <button type="button" onclick="toggleDiv()" class="btn btn-success btn-sm ms-3" data-cookie-string="@cookieString">
+            Я понял!
+        </button>
+    </div>
+    <script>
+        function toggleDiv() {
+            var displayStatus = document.getElementById("cookieConsent");
+            displayStatus.style.display = 'none';
+            document.cookie = ".AspNet.Consent=yes;";
+        }
+    </script>
+}

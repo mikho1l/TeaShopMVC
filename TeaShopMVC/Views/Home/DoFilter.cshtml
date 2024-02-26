@@ -1,0 +1,96 @@
+﻿@model TeaShopMVC.ViewModel.Filter
+@{
+    ViewData["Title"] = "Чайная полка";
+}
+<br />
+<br />
+<form asp-action="DoFilter" asp-controller="Home" method="post">
+    <div class="form-inline justify-content-around">
+        <input type="hidden" asp-for="@Model.Criteria.SearchWord" name="SearchWord" />
+        <input type="hidden" asp-for="@Model.Criteria.MinDefaultPrice"  name="MinDefaultPrice"/>
+        <input type="hidden" asp-for="@Model.Criteria.MaxDefaultPrice" name="MaxDefaultPrice"/>
+        <div class="row g-3 ms-3 mt-0 mb-2">
+            <div class="col-md-2" style="width: 195px">
+                <div class="form-group mb-2">
+                    <label class="form-label">Категория:</label>
+                    <select name="CategoryID" asp-items="Model.Categories" class="form-control"></select>
+                </div>
+                <div class="col-md-3 me-3" style="width: 290px">
+                    <label class="form-label">Цена:</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">от</span>
+                        <input type="number" name="MinPrice" value="@Model.Criteria.MinPrice" placeholder="@Model.Criteria.MinDefaultPrice"
+                               max="@Model.Criteria.MaxDefaultPrice" min="@Model.Criteria.MinDefaultPrice" onchange='Check(event, @Model.Criteria.MinDefaultPrice)' />
+                        <span class="input-group-text">до</span>
+                        <input type="number" name="MaxPrice" value="@Model.Criteria.MaxPrice" placeholder="@Model.Criteria.MaxDefaultPrice"
+                               max="@Model.Criteria.MaxDefaultPrice" min="@Model.Criteria.MinDefaultPrice" onchange='Check(event, @Model.Criteria.MaxDefaultPrice)' />
+                    </div>
+                </div>
+                <div class="col-md-2" style="width: 195px">
+                    <div class="form-group mb-2">
+                        <label class="form-label">Сортировка:</label>
+                        <select name="SortOrderId" asp-items="Model.SortOrder" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="col-md-2" style="width: 195px">
+                    <div class="form-group mb-2">
+                        <label class="form-label">В наличии:</label>
+                        @Html.CheckBox("InStock", false)
+                    </div>
+                </div>
+                <div class="col-md-2 ms-4" style="width: 100px">
+                    <label class="form-label"></label>
+                    <div class="input-group">
+                        <input type="submit" class="mt-2 btn btn-success" value="Применить" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br /><br />
+</form>
+<div class="container">
+    <div class="row justify-content-start  row-cols-4">
+        @foreach (var tea in Model.Teas)
+        {
+            <div class="col-md-auto col-sm-4 p-2">
+                <div class="card" style="width: 12rem">
+                    <img src="@Url.Content("~/images/")@tea.ImageUrl" class="card-img-top" alt="обложка">
+                    <div class="card-body" style="min-height: 200px">
+                        <div class="position-absolute bottom-0">
+                            <h4 class="card-title">@tea.Price руб.</h4>
+                            <a asp-action="Details" asp-controller="Tea" asp-route-id="@tea.Id " target="_blank" class="btn btn-light">
+                                @tea.Name
+                            </a>
+                            <p class="card-text">@tea.Type.Name</p>
+                            <p class="weight-text">@tea.Weight (гр.)</p>
+                            @if (tea.Amount != 0)
+                            {
+                                <a asp-action="Add" asp-controller="Cart" asp-route-id="@tea.Id" class="btn btn-info"
+                           style="margin-bottom:10px" target="_blank">
+                                    В корзину
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-secondary" style="margin-bottom:10px">Нет в наличии</a>
+                            }
+                        </div>
+
+                        <br />
+                        <p> &nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    function Check(e, defaultPrice) {
+        let text = e.target.value;
+        if (isNaN(parseInt(text, 10)) || parseInt(text, 10) < 0) {
+            e.target.value = defaultPrice;
+        }
+    }
+</script>

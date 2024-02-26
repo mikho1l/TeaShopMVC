@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+
+namespace TeaShopMVC.Models
+{
+    [Table("Clients")]
+    public class Client
+    {
+        [HiddenInput(DisplayValue = false)]
+        public string Id { get; set; } // ID покупателя
+
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Длина строки должна быть от 2 до 50 символов")]
+        [Display(Name = "Фамилия")]
+        public string LastName { get; set; }
+
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки должна быть от 3 до 50 символов")]
+        [Display(Name = "Имя")]
+        public string Name { get; set; }
+
+        [Display(Name = "Адрес")]
+        public string Address { get; set; }
+
+        [Required]
+        [Display(Name = "Общая сумма заказов")]
+        public int TotalOrdersCost { get; set; }
+
+        [Required]
+        [Display(Name = "Количество заказов")]
+        public int OrdersNumber { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public int ReviewsNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Ваша текущая скидка")]
+        public int CurrentDiscount { get; set; }
+    }
+}

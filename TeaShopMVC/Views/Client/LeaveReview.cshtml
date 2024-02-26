@@ -1,0 +1,56 @@
+﻿@model TeaShopMVC.Models.Review
+
+@{
+    ViewData["Title"] = "LeaveReview";
+}
+
+<h2>LeaveReview</h2>
+
+<h4>Review</h4>
+<hr />
+<div class="row">
+    <div class="col-md-3">
+        @{ Tea tea = (Tea)ViewBag.Tea;}
+        <div class="card" style="width: 12rem;">
+            <img src="@Url.Content("~/images/")@tea.ImageUrl" class="card-img-top" alt="обложка">
+            <div class="card-body">
+                <h4 class="card-title">@tea.Price руб.</h4>
+                <a asp-action="Details" asp-controller="Book" asp-route-id="@tea.Id" class="btn btn-light">
+                    @tea.Name
+                </a>
+                <p class="card-text">@tea.Weight</p>
+                <p class="card-text">@tea.Name</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="LeaveReview">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+            <label asp-for="TeaId" class="control-label"></label>
+            <input asp-for="TeaId" class="form-control" />
+            <span asp-validation-for="TeaId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ClientId" class="control-label"></label>
+            <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
+        </div>*@
+            <input type="hidden" asp-for="TeaId" />
+            <input type="hidden" asp-for="ClientId" />
+            <input type="hidden" asp-for="Owner" />
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="GetPurchaseHistory">Back to List</a>
+</div>
+

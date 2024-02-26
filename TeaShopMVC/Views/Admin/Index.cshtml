@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Web
+@model IEnumerable<IdentityUser>
+@{
+    ViewData["Title"] = "Index";
+    //Layout=
+
+}
+
+<h2>Список пользователей</h2>
+<table>
+    <tr>
+        <th>
+            Пользователь
+        </th>
+        <th>
+            Email
+            подтвержден
+        </th>
+        <th>
+            Роли
+        </th>
+        <th>
+            Удаление
+        </th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>@user.EmailConfirmed</td>
+            <td>
+                <a asp-action="EditUserRole" asp-route-id="@user.Id" class="btn btn-info">
+                    @HttpUtility.HtmlDecode("&#9998;")
+                </a>
+            </td>
+            <td>
+                <a asp-action="DeleteUserAsync" asp-route-id="@user.Id" class="btn btn-info">
+                    @HttpUtility.HtmlDecode("&#10060;")
+                </a>
+            </td>
+        </tr>
+    }
+</table>
+

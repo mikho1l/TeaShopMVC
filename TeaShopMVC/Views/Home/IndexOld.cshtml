@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TeaShopMVC.Models.Tea>
+
+@{
+    ViewData["Title"] = "Чайная полка";
+}
+
+<br/>
+<div class="container">
+    <div class="row justify-content-around  row-cols-4">
+        @foreach (var tea in Model)
+        {
+            <div class="col-md-auto col-sm-3">
+                <div class="card" style="width: 12rem;">
+                    <img src="@Url.Content("~/images/")@tea.ImageUrl" class="card-img-top" alt="обложка">
+                    <div class="card-body">
+                        <h4 class="card-title">@tea.Price руб.</h4>
+                        <a asp-action="Details" asp-controller="Tea" asp-route-id="@tea.Id" class="btn btn-light">
+                            @tea.Name
+                        </a>
+                        <p class="card-text">@tea.Type.Name</p>
+                        <p class="weight-text">@tea.Weight (гр.)</p>
+                        @if (tea.Amount != 0)
+                        {
+                        <a asp-action="Add" asp-controller="Cart" asp-route-id="@tea.Id" class="btn btn-info">
+                            В корзину
+                        </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-secondary">Нет в наличии</a>
+                        }
+                        <br/>
+                        <p> &nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

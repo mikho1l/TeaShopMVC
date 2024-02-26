@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IdentityUser
+@{
+    ViewData["Title"] = "DeleteUserAsync";
+}
+
+<h2>Вы уверены,что хотите удалить этого пользователя?</h2>
+<form asp-action="DeleteUser" method="post" asp-route-id="@Model.Id">
+
+    <h4>@Model.Email</h4>
+    <input type="submit" class="btn btn-warning" value="Удалить" />
+</form>
+<a asp-action="Index" asp-controller="Admin" class="btn btn-info">Назад </a>
